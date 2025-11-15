@@ -1,0 +1,50 @@
+name: API Test Suite CI
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout repository
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Set up Python
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      # Install dependencies
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest pytest-html pytest-logger python-dotenv
+
+      # Create .env file from GitHub Secrets
+      - name: Generate .env from GitHub Secrets
+        run: |
+          echo "WEBHOOK_URL=${{ secrets.WEBHOOK_URL }}" >> .env
+          echo "WEBHOOK_TOKEN=${{ secrets.WEBHOOK_TOKEN }}" >> .env
+
+      # Run pytest and generate reports
+      - name: Run tests
+        run: |
+          pytest --disable-warnings -q \
+            --html=reports/report.html \
+            --self-contained-html \
+            --junitxml=reports/junit.xml
+
+      # Upload test reports as artifacts
+      - name: Upload test reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports
+          path: reports/

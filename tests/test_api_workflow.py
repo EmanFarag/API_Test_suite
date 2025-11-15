@@ -1,0 +1,39 @@
+import pytest
+from utils.api_client import APIClient
+
+client = APIClient()
+
+# Helper fixture to access test data
+@pytest.fixture
+def data():
+    return client.test_data
+
+@pytest.mark.parametrize(
+    "resource_payload,expected_status",
+    [
+        ("valid_resource_creation", 201),
+        ("invalid_resource_with_missing_title_field", 201),  # JSONPlaceholder accepts anything
+        ("invalid_resource_with_empty_body", 201),
+    ],
+)
+def test_create_resource(resource_payload, expected_status, data):
+    payload = data[resource_payload]
+    response = client.post("/posts", payload)
+    assert response.status_code == expected_status
+    assert "id" in response.json()
+
+
+def test_get_resource_by_id(data):
+    #create_response = client.post("/posts", data["valid_resource"])
+    #created_id = create_response.json().get("id")
+
+    response = client.get(f"/posts/1")
+    assert response.status_code == 200
+
+
+def test_delete_resource_by_id(data):
+    #create_response = client.post("/posts", data["valid_resource"])
+    #created_id = create_response.json().get("id")
+
+    response = client.delete(f"/posts/1")
+    assert response.status_code == 200

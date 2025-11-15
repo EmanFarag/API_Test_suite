@@ -1,0 +1,16 @@
+base_url: "https://jsonplaceholder.typicode.com"
+
+test_data:
+  valid_resource_creation:
+    title: "foo"
+    body: "bar"
+    userId: 1
+
+  invalid_resource_with_missing_title_field:
+    body: "bar"
+    userId: 1
+
+  invalid_resource_with_empty_body:
+    title: "foo"
+    body: ""
+    userId: 1
