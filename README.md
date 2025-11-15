@@ -22,25 +22,25 @@ pytest --html=reports/report.html --self-contained-html
 ## Framework & library choices
 
 API_Webhook_test_suite/
-tests/
-   __init__.py
-   test_api_workflow.py
-   test_webhook_validation.py
-
-utils/
-   __init__.py
-   api_client.py
-   webhook_utils.py
-
-config/
-   settings.yml
-.github/
-   workflows/
-      ci.yml
-.env
-requirements.txt
-README.md
-
+```
+API_Test_suite/
+├── tests/
+│ ├── init.py
+│ ├── test_api_workflow.py
+│ └── test_webhook_validation.py
+├── utils/
+│ ├── init.py
+│ ├── api_client.py
+│ └── webhook_utils.py
+├── config/
+│ └── settings.yml
+├── .github/
+│ └── workflows/
+│ └── ci.yml
+├── .env
+├── requirements.txt
+└── README.md
+```
 **Libraries used in the framework are:**
    1. pytest -> supports fixtures, parametrization, and reporting.
    2. requests	->	Handles API and webhook calls.
