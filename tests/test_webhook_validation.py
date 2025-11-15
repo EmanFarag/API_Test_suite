@@ -6,12 +6,10 @@ from utils.webhook_utils import WebhookClient
 client = WebhookClient()
 test_payload = client.test_payload
 
-
 @pytest.fixture
 def send_test_webhook():
     timestamp = client.send_webhook()
     return timestamp
-
 
 def test_webhook_received(send_test_webhook):
     utc_now = datetime.now(timezone.utc)
@@ -27,7 +25,6 @@ def test_webhook_received(send_test_webhook):
     raw_content = (
         last_request.get("content")
     )
-
     try:
         payload = json.loads(raw_content) if raw_content else {}
     except json.JSONDecodeError:
