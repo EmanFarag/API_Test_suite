@@ -15,21 +15,17 @@ def send_test_webhook():
 
 def test_webhook_received(send_test_webhook):
     utc_now = datetime.now(timezone.utc)
-
     requests_list = client.fetch_webhook_requests()
 
     assert isinstance(requests_list, list), "Webhook API did not return a list of events"
     assert len(requests_list) > 0, "No webhook requests received"
 
-    # The newest entry is index 0
+    # The newest entry is index -1
     last_request = requests_list[-1]
 
     # Extract content from the webhook
     raw_content = (
         last_request.get("content")
-        or last_request.get("body")
-        or last_request.get("data")
-        or ""
     )
 
     try:
@@ -37,7 +33,7 @@ def test_webhook_received(send_test_webhook):
     except json.JSONDecodeError:
         payload = {}
 
-    # Headers from webhook
+    # Get Headers from webhook
     headers = last_request.get("headers", {})
 
     # Validate payload keys + values
@@ -45,12 +41,10 @@ def test_webhook_received(send_test_webhook):
         assert key in payload, f"{key} missing from webhook payload"
         assert payload[key] == value, f"{key} mismatch"
 
-    # Validate custom timestamp header
+    # Validate custom timestamp in header
     x_request_time_value = headers.get("x-request-time")
-
     assert x_request_time_value is not None, "Missing x-request-time header"
 
-    # Webhook.site returns headers as lists → extract the string
     if isinstance(x_request_time_value, list):
         x_request_time_str = x_request_time_value[0]
     else:

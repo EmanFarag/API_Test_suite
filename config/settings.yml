@@ -2,15 +2,18 @@ base_url: "https://jsonplaceholder.typicode.com"
 
 test_data:
   valid_resource_creation:
-    title: "foo"
-    body: "bar"
+    title: "create valid resource"
+    body: "create valid resource"
     userId: 1
 
   invalid_resource_with_missing_title_field:
-    body: "bar"
-    userId: 1
+    body: "create invalid resource"
+    userId: 2
 
   invalid_resource_with_empty_body:
-    title: "foo"
+    title: "create invalid resource with empty body"
     body: ""
-    userId: 1
+    userId: 3
+
+  valid_resource_id: 1
+  invalid_resource_id: 9999

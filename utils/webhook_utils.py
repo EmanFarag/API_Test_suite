@@ -1,20 +1,12 @@
-import logging
 import os
 import time
 import requests
 from datetime import datetime, timezone
 from dotenv import load_dotenv
+from utils import logger
 
 # Load .env
 load_dotenv()
-
-# Logging configuration
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
-handler = logging.StreamHandler()
-handler.setFormatter(logging.Formatter("[%(asctime)s] %(levelname)s: %(message)s"))
-logger.addHandler(handler)
-
 
 class WebhookClient:
     def __init__(self, payload=None, timeout_seconds=120):
@@ -62,15 +54,10 @@ class WebhookClient:
 
             response = requests.get(api_url, timeout=self.timeout_seconds)
             response.raise_for_status()
-
             data = response.json()
 
-            # ✔ Webhook.site always wraps list inside "data"
             events = data.get("data", [])
-
             if isinstance(events, list) and events:
                 return events
-
             time.sleep(delay)
-
         return []

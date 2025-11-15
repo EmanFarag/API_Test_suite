@@ -10,9 +10,8 @@ webhook delivery.
    ```bash
    pip install -r requirements.txt
 
-set environment variables:
-
-Create a .env file in the project root:
+3. set environment variables:
+   Create a .env file in the project root:
 
 WEBHOOK_URL=<your webhook URL ending with /api>
 WEBHOOK_TOKEN=<your webhook token>
@@ -20,24 +19,27 @@ WEBHOOK_TOKEN=<your webhook token>
 ## Run Tests with HTML report
 pytest --html=reports/report.html --self-contained-html
 
-
 ## Framework & library choices
 
-API_Test_suite/
-├── tests/
-│ ├── test_api_workflow.py
-│ ├── test_webhook_validation.py
-│ ├── __init__.py
-├── utils/
-│ ├── api_client.py
-│ ├── webhook_utils.py
-│ ├── __init__.py
-├── config/
-│ ├── settings.yml
-├── .env
-├── requirements.txt
-├── reports/
-└── README.md
+API_Webhook_test_suite/
+tests/
+   __init__.py
+   test_api_workflow.py
+   test_webhook_validation.py
+
+utils/
+   __init__.py
+   api_client.py
+   webhook_utils.py
+
+config/
+   settings.yml
+.github/
+   workflows/
+      ci.yml
+.env
+requirements.txt
+README.md
 
 **Libraries used in the framework are:**
    1. pytest -> supports fixtures, parametrization, and reporting.
@@ -60,3 +62,4 @@ API_Test_suite/
    2. Tests assume Webhook.site API structure is adding the latest request at the end of the requests body; if their API changes, parsing logic must be updated.
 
 ## One test design decision based on risk
+   Fetching x_request_time in headers to make sure that we validate the correct latest request

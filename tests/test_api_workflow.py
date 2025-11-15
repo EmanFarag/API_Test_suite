@@ -3,7 +3,6 @@ from utils.api_client import APIClient
 
 client = APIClient()
 
-# Helper fixture to access test data
 @pytest.fixture
 def data():
     return client.test_data
@@ -22,17 +21,21 @@ def test_create_resource(resource_payload, expected_status, data):
     assert response.status_code == expected_status
     assert "id" in response.json()
 
-
-def test_get_resource_by_id(data):
-    #create_response = client.post("/posts", data["valid_resource"])
-    #created_id = create_response.json().get("id")
-
-    response = client.get(f"/posts/1")
-    assert response.status_code == 200
+@pytest.mark.parametrize(
+    "resource_id_payload,expected_status",
+    [
+        ("valid_resource_id", 200),
+        ("invalid_resource_id", 404),
+    ],
+)
+def test_get_resource_by_id(resource_id_payload, expected_status, data):
+    payload = data[resource_id_payload]
+    response = client.get(f"/posts/{payload}")
+    assert response.status_code == expected_status
 
 
 def test_delete_resource_by_id(data):
-    #create_response = client.post("/posts", data["valid_resource"])
+    #create_response = client.post("/posts", data["valid_resource_creation"])
     #created_id = create_response.json().get("id")
 
     response = client.delete(f"/posts/1")
