@@ -21,7 +21,7 @@ pytest --html=reports/report.html --self-contained-html
 
 ## Framework & library choices
 
-API_Webhook_test_suite/
+**Project Structure**
 ```
 API_Test_suite/
 ├── tests/
