@@ -1,3 +1,4 @@
+import time
 import pytest
 import json
 from datetime import datetime, timezone
@@ -13,6 +14,7 @@ def send_test_webhook():
 
 def test_webhook_received(send_test_webhook):
     utc_now = datetime.now(timezone.utc)
+    time.sleep(5)
     requests_list = client.fetch_webhook_requests()
 
     assert isinstance(requests_list, list), "Webhook API did not return a list of events"

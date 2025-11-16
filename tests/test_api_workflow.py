@@ -35,8 +35,8 @@ def test_get_resource_by_id(resource_id_payload, expected_status, data):
 
 
 def test_delete_resource_by_id(data):
-    #create_response = client.post("/posts", data["valid_resource_creation"])
-    #created_id = create_response.json().get("id")
+    create_response = client.post("/posts", data["valid_resource_creation"])
+    created_id = create_response.json().get("id")
 
-    response = client.delete(f"/posts/1")
+    response = client.delete(f"/posts/{created_id}")
     assert response.status_code == 200
