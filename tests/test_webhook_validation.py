@@ -43,7 +43,7 @@ def test_webhook_received(send_test_webhook):
     else:
         pytest.fail("Webhook request not received within timeout period")
 
-    # Now validate the payload and headers
+    # Validate the payload and headers
     raw_content = last_request.get("content")
     try:
         payload = json.loads(raw_content) if raw_content else {}
