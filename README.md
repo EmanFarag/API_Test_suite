@@ -17,8 +17,9 @@ WEBHOOK_URL=<your webhook URL ending with /api>
 WEBHOOK_TOKEN=<your webhook token>
 ```
 ## Run Tests with HTML report
-pytest --html=reports/report.html --self-contained-html
-
+   ```
+  pytest --html=reports/report.html --self-contained-html
+   ```
 ## Framework & library choices
 
 **Project Structure**
