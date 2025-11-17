@@ -12,10 +12,10 @@ webhook delivery.
 
 3. set environment variables:
    Create a .env file in the project root:
-
+```
 WEBHOOK_URL=<your webhook URL ending with /api>
 WEBHOOK_TOKEN=<your webhook token>
-
+```
 ## Run Tests with HTML report
 pytest --html=reports/report.html --self-contained-html
 
