@@ -2,10 +2,15 @@ import time
 import pytest
 import json
 from datetime import datetime, timezone
+
+import requests
+
+from tests.test_api_workflow import client
 from utils.webhook_utils import WebhookClient
 
 client = WebhookClient()
 test_payload = client.test_payload
+token = client.webhook_token
 
 @pytest.fixture
 def send_test_webhook():
@@ -55,8 +60,22 @@ def test_webhook_received(send_test_webhook):
         assert key in payload, f"{key} missing from webhook payload"
         assert payload[key] == value, f"{key} mismatch"
 
-        # Validate timestamp is recent
-        utc_now = datetime.now(timezone.utc)
-        x_request_time = datetime.fromisoformat(x_request_time_str)
-        delta = utc_now - x_request_time
-        assert delta.total_seconds() <= 120, f"x-request-time older than 2 minutes ({delta})"
+    # Requested part to fetch uuid and validate the X-Correlation-ID in this specific payload
+    uuid = last_request.get("uuid")
+    x_correlation_id = payload["X-Correlation-ID"]
+    assert uuid, "UUID missing from webhook payload"
+    url = f"https://webhook.site/token/{x_correlation_id}/requests?query=uuid:{uuid}"
+    response = requests.get(url)
+
+    assert response.status_code == 200, f"API returned {response.status_code} for this {x_correlation_id}"
+    assert response.json().get("data"), f"No requests found for UUID: {uuid}"
+
+    assert "X-Correlation-ID" in payload, "X-Correlation-ID missing from webhook body"
+    assert payload[
+               "X-Correlation-ID"] == token, f"X-Correlation-ID mismatch. Expected: {token}, Got: {payload['X-Correlation-ID']}"
+
+    # Validate timestamp is recent
+    utc_now = datetime.now(timezone.utc)
+    x_request_time = datetime.fromisoformat(x_request_time_str)
+    delta = utc_now - x_request_time
+    assert delta.total_seconds() <= 120, f"x-request-time older than 2 minutes ({delta})"

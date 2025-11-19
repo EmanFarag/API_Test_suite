@@ -11,14 +11,15 @@ def data():
     "resource_payload,expected_status",
     [
         ("valid_resource_creation", 201),
-        ("invalid_resource_with_missing_title_field", 201),  # JSONPlaceholder accepts anything
-        ("invalid_resource_with_empty_body", 201),
+        ("invalid_resource_with_missing_title_field", 400),  # Bad request
+        ("invalid_resource_with_empty_body", 422),  # Unprocessable Entity
     ],
 )
 def test_create_resource(resource_payload, expected_status, data):
     payload = data[resource_payload]
     response = client.post("/posts", payload)
     assert response.status_code == expected_status
+    assert response.json()["userId"] == payload.get("userId")
     assert "id" in response.json()
 
 @pytest.mark.parametrize(
@@ -29,8 +30,8 @@ def test_create_resource(resource_payload, expected_status, data):
     ],
 )
 def test_get_resource_by_id(resource_id_payload, expected_status, data):
-    payload = data[resource_id_payload]
-    response = client.get(f"/posts/{payload}")
+    resource_id = data[resource_id_payload]
+    response = client.get(f"/posts/{resource_id}")
     assert response.status_code == expected_status
 
 

@@ -15,7 +15,8 @@ class WebhookClient:
         self.timeout_seconds = timeout_seconds
         self.test_payload = payload or {
             "event": "test_event",
-            "data": "sample data"
+            "data": "sample data",
+            "X-Correlation-ID": self.webhook_token,
         }
 
         if not self.webhook_url:
